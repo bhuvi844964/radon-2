@@ -1,32 +1,47 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+var ip = require("ip");
+
 // const UserModel= require("../models/userModel.js")
-const UserController= require("../controllers/userController")
-const BookController= require("../controllers/bookController")
-const commonMW = require ("../middlewares/commonMiddlewares")
+const UserController = require("../controllers/userController");
+const BookController = require("../controllers/bookController");
+const commonMW = require("../middlewares/commonMiddlewares");
 
 router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
-})
+  res.send("My first ever api!");
+});
 
+const middleware = (req, res, next) => {
+  console.log("hello from middleware");
+  next();
+};
+router.get("/createUser", middleware, (req, res) => {
+  let now = new Date();
+  let year = now.getFullYear();
+  let mon = now.getMonth();
+  let date = now.getDate();
+  let hor = now.getHours();
+  let min = now.getMinutes();
+  let sec = now.getSeconds();
+  let ipaddress = ip.address();
+  let path = req.route.path;
 
+  console.log(
+    `${year}-${mon}-${date}   ${hor}:${min}:${sec}    ${ipaddress}  ${path}`
+  );
+});
 
-
-router.post("/createBook", BookController.createBook  )
-
-
-
+// router.post("/createBook", BookController.createBook);
 
 // router.post("/createUser", UserController.createUser  )
 // router.get("/getUsersData", UserController.getUsersData)
-
 
 // const mid1= function ( req, res, next) {
 //     console.log("Hi I am a middleware named Mid1")
 //     // logic
 //     let loggedIn = false
 
-//     if (loggedIn== true) { 
+//     if (loggedIn== true) {
 //         console.log( "OK LOGGED IS IS TRUE NOW")
 //         next ()
 //     }
@@ -44,19 +59,10 @@ router.post("/createBook", BookController.createBook  )
 // router.get('/termsAndConditions',  UserController.termsAndConditions)
 // router.get('/register',  UserController.register)
 
-
-
-
-
-router.get("/basicRoute", commonMW.mid1, commonMW.mid2, commonMW.mid3, commonMW.mid4, UserController.basicCode)
-
-
+// router.get("/basicRoute", commonMW.mid1, commonMW.mid2, commonMW.mid3, commonMW.mid4, UserController.basicCode)
 
 // router.get("/basicRoute2", commonMW.mid1, UserController.basicCode2)
 // router.get("/basicRoute3", commonMW.mid2, UserController.basicCode3)
 // router.get("/basicRoute4", commonMW.mid1, commonMW.mid4, UserController.basicCode4)
-
-
-
 
 module.exports = router;
